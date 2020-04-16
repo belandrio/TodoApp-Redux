@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Todos from "./component/Todos";
 import AddTodo from "./component/AddTodo"
+import { v4 as uuidv4 } from 'uuid';
 
 class App extends Component {
   state = {
@@ -40,7 +41,7 @@ class App extends Component {
     
       addTodo = (title) => {
         const newTodo = {
-        id:4, 
+        id:uuidv4(), 
         title, 
         completed: false
           };
