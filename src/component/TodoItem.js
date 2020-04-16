@@ -17,7 +17,7 @@ export class TodoItem extends Component {
         return (
             <div style={this.getStyle()}>
                 <p> 
-                    <input type="checkbox" onChange={this.props.markComplete}  /> {' '}
+                    <input type="checkbox" onChange={(e) => this.props.markComplete(this.props.id, e)}  /> {' '}
                     {this.props.todo.title} </p>
             </div>
         )
