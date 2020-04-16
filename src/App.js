@@ -19,10 +19,15 @@ class App extends Component {
         completed: false
       }]
   };
+
+  markComplete= () =>{
+    console.log("From App")
+    }
+
   render() {
     return (
       <div className="App">
-         <Todos todos={this.state.todos} />
+         <Todos todos={this.state.todos} markComplete={this.markComplete} />
       </div>
     );
   }
