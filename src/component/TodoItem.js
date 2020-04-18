@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import PropTypes from "prop-types"
 
 export class TodoItem extends Component {
 
@@ -37,5 +37,12 @@ const btnStyle = {
   cursor: 'pointer',
   float: 'right'
 }
+
+TodoItem.propTypes = {
+    todo: PropTypes.object.isRequired,
+    markComplete: PropTypes.func.isRequired,
+    deleteTodo: PropTypes.func.isRequired
+  }
+  
 
 export default TodoItem

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types"
 
 export class AddTodo extends Component {
     state = {
@@ -40,6 +41,10 @@ const btnStyle = {
     cursor: 'pointer',
     fontSize: '16px',
     float: 'right'
+  }
+  
+  AddTodo.propTypes = {
+    addTodo: PropTypes.func.isRequired
   }
   
 
