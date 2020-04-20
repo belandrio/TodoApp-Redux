@@ -3,58 +3,79 @@ import './App.css';
 import Todos from "./component/Todos";
 import AddTodo from "./component/AddTodo"
 import Search from "./component/Search"
-import { v4 as uuidv4 } from 'uuid';
+//import { v4 as uuidv4 } from 'uuid';
 import Header from "./layout/Header";
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import About from "./pages/About"
-import axios from "axios"
+//import axios from "axios"
+import firebase from "./Firebase";
 
 class App extends Component {
+  db = firebase.firestore().collection('todos')
   state = {
     todos: [],
-    filtered: []
-
+    filtered: [],
   };
 
-  componentDidMount() {
-    axios
-      .get('https://jsonplaceholder.typicode.com/todos?_limit=10')
-      .then(res => this.setState({ todos: res.data }));
-      this.setState({
-        filtered: this.state.todos
+  onCollectionUpdate = (docSnapshot) => {
+    const todos = [];
+    docSnapshot.forEach((doc) => {
+      const { title, completed } = doc.data();
+      todos.push({
+        id: doc.id,
+        title,
+        completed,
+        doc // DocumentSnapshot
       });
+    });
+    this.setState({
+      todos: todos,
+      filtered: todos
+    });
+  }
+
+  componentDidMount() {
+    this.db.onSnapshot(this.onCollectionUpdate);
   }
 
 
   markComplete = (id) => {
-    this.setState({
-      todos: this.state.todos.map(todo => {
-        if (todo.id === id) {
-          todo.completed = !todo.completed;
+    this.db.doc(id).get()
+      .then((doc) => {
+        if (doc.exists) {
+          const { completed } = doc.data();
+          this.db.doc(id).update({
+            completed: !completed
+          })
+        } else {
+          console.log("No such document!");
         }
-        return todo
       })
-    });
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
   };
 
-  deleteTodo = id => {
-    axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`).then(res =>
-      this.setState({
-        todos: [...this.state.todos.filter(todo => todo.id !== id)]
-      })
-    );
+  deleteTodo = (id) => {
+    console.log(id)
+    this.db.doc(id).delete()
+      .then(() => {
+        console.log("Document successfully deleted!")
+      }).catch((error) => {
+        console.error("Error removing document: ", error);
+      });
   };
 
 
   addTodo = (title) => {
-    axios
-      .post('https://jsonplaceholder.typicode.com/todos', {
-        title,
-        completed: false
-      })
-      .then(res => {
-        res.data.id = uuidv4();
-        this.setState({ todos: [...this.state.todos, res.data], filtered: [...this.state.todos, res.data] });
+    this.db.add({
+      title,
+      completed: false
+    }).then(() => {
+      console.log("The todo is added");
+    })
+      .catch((error) => {
+        console.error("Error adding document: ", error);
       });
   };
 
@@ -101,5 +122,6 @@ class App extends Component {
   }
 }
 export default App;
+
 
 
