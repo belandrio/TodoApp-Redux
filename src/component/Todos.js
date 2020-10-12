@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import TodoItem from "./TodoItem"
-import PropTypes from "prop-types"
+
 // Redux
 import store from "../redux/store";
 
@@ -25,7 +25,6 @@ class Todos extends Component {
       }
 
     render() {
-        console.log(this.state.todos)
         return (
             this.state.todos.map((todo) => (
                 <TodoItem key={todo.id} todo={todo}/>
@@ -34,11 +33,5 @@ class Todos extends Component {
         )
     }
 }
-
-Todos.propTypes = {
-    todos: PropTypes.array.isRequired,
-    markComplete: PropTypes.func.isRequired,
-    deleteTodo: PropTypes.func.isRequired 
-  }
   
   export default Todos;
